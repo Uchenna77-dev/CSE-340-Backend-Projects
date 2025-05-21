@@ -97,7 +97,8 @@ Util.generateVehicleHTML = function (vehicle) {
         </div>
       </div>
       <footer>
-        <p>&copy; <span id="year"></span> CSE 340 App</p>
+        <p>&copy; <span id="year"></span> CSE 340 App </p>
+        <p><a href="/error">Server Error</a></p>
       </footer>
     </body>
     </html>

@@ -8,5 +8,8 @@ router.get("/type/:classificationId", invController.buildByClassificationId);
 // Route to get vehicle details
 router.get("/detail/:inv_id", invController.getInventoryItem);
 
+// Create Error Route
+router.get("/errors/serverError", invController.triggerError);
+
 
 module.exports = router;

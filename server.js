@@ -41,6 +41,13 @@ app.use("/inv", inventoryRoute)
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})
 })
+// Server intentional error
+app.use((err, req, res, next) => {
+   // console.error(err.stack); // Logs the error for debugging
+    res.status(500).render("serverError", { message: err.message });
+});
+
+
 
 /* ***********************
 * Express Error Handler

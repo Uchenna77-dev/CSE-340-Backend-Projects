@@ -41,5 +41,16 @@ invCont.getInventoryItem = async function (req, res) {
     res.status(500).send("Server error");
   }
 };
+/* ***************************
+ * Generate intentional error
+ * ************************** */
+invCont.triggerError = (req, res, next) => {
+    try {
+        throw new Error("Intentional Server Error");
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 module.exports = invCont;
