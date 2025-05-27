@@ -1,0 +1,43 @@
+
+  <link rel="stylesheet" href="/css/styles.css">
+  <script defer src="/js/showPassword.js"></script>
+  <main>
+    <h1><%= title %></h1>
+
+    <% if (message) { %>
+      <div id="flash-message">
+        <%= message %>
+        <% if (errors) { %>
+          <ul class="notice">
+          <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+          <%  }) %>
+          </ul>
+        <% } %>      
+      </div>
+    <% } %>
+
+    <form action="/account/register" method="post" id="form-container">
+      <label for="account_firstname">First Name</label>
+      <input type="text" id="account_firstname" name="account_firstname" required
+             value="<%= typeof account_firstname != 'undefined' ? account_firstname : '' %>">
+
+      <label for="account_lastname">Last Name</label>
+      <input type="text" id="account_lastname" name="account_lastname" required
+             value="<%= typeof account_lastname != 'undefined' ? account_lastname : '' %>">
+
+      <label for="account_email">Email Address</label>
+      <input type="email" id="account_email" name="account_email" required
+             value="<%= typeof account_email != 'undefined' ? account_email : '' %>">
+
+      <label for="account_password">Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="account_password" name="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
+        <button type="button" id="togglePassword">Show</button>
+      </div>
+      <p class="password-requirements">
+        Password must be at least 12 characters and include at least one capital letter, one number, and one special character.
+      </p>
+      <button type="submit">Register</button>
+    </form>
+  </main>
