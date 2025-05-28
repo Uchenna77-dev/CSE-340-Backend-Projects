@@ -29,6 +29,31 @@ async function buildRegister(req, res, next) {
   }  
 }
 
+
+async function loginAccount(req, res) {
+    const { account_email, account_password } = req.body;
+
+    // Validate user credentials using your model
+    const user = await accountModel.validateUser(account_email, account_password);
+    
+    if (!user) {
+        let nav = await utilities.getNav();
+        res.render("account/login", {
+            title: "Login",
+            nav,
+            errors,
+            account_email,
+            account_password,
+        });
+        return;
+    }
+
+    // Set session if login successful
+    req.session.user = user;
+    res.redirect("/account/dashboard"); // Redirect to user dashboard after login
+};
+
+
 /* ****************************************
 *  Process Registration
 * *************************************** */
@@ -61,5 +86,5 @@ async function registerAccount(req, res) {
   }
 }
 
-module.exports = { buildLogin, buildRegister, registerAccount };
+module.exports = { buildLogin, buildRegister, registerAccount, loginAccount };
  
