@@ -1,6 +1,18 @@
-<%- include('partials/header', { title: title }) %>
-<main>
-  <h1>500 - Server Error</h1>
-  <p><%= message %></p>
-</main>
-<%- include('partials/footer') %>
+<% layout = false %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Server Error</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Server Error</h1>
+    </header>
+    <main>
+        <p>We encountered an unexpected issue.</p>
+        <p>Oops! Something Went Wrong</p>
+        <a href="/">Go Back to Home</a>
+    </main>
+</body>
+</html>  

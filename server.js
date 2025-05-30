@@ -75,11 +75,6 @@ app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})
 })
 // Server intentional error
-app.use((err, req, res, next) => {
-   // console.error(err.stack); // Logs the error for debugging
-    res.status(500).render("serverError", { message: err.message });
-});
-
 
 
 /* ***********************
@@ -88,14 +83,18 @@ app.use((err, req, res, next) => {
 *************************/
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
-  res.render("errors/error", {
-    title: err.status || 'Server Error',
+  const status = err.status || 500
+  const title = status === 404 ? "Page Not Found" : "Server Error"
+  const message = err.message || "Something went wrong."
+
+  const viewPath = status === 404 ? "errors/error" : "serverError"
+  res.status(status).render(viewPath, {
+    title,
     message,
     nav
   })
 })
+
 
 /* ***********************
  * Local Server Information
