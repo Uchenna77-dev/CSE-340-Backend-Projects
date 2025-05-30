@@ -41,6 +41,7 @@ invCont.getInventoryItem = async function (req, res) {
     res.status(500).send("Server error");
   }
 };
+
 /* ***************************
  * Generate intentional error
  * ************************** */
@@ -51,6 +52,120 @@ invCont.triggerError = (req, res, next) => {
         next(error);
     }
 };
+
+invCont.addClassification = async function(req, res) {
+  const { classification_name } = req.body;
+  console.log("Incoming classification name:", classification_name); // 🔍 debug line
+
+  try {
+    const newClassification = await invModel.insertClassification(classification_name);
+    req.flash("info", "Classification added successfully.");
+    res.redirect("/inv/management");
+  } catch (error) {
+    console.error("Insert error:", error.message); 
+    req.flash("error", "Failed to add classification.");
+    res.redirect("/inv/add-classification");
+  }
+};
+
+
+/* ***************************
+ * Show add classification form
+ * ************************** */
+invCont.showAddClassification = async function (req, res, next) {
+  try {
+    const nav = await utilities.getNav();
+
+    res.render("inventory/add-classification", {
+      title: "Add New Classification",
+      nav,
+      message: req.flash("info") || req.flash("error"),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* ***************************
+ * Add inventory form
+ * ************************** */
+invCont.addInventory = async function (req, res, next) {
+  const {
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
+  } = req.body;
+
+  try {
+    const result = await invModel.insertInventory(
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id
+    );
+
+    req.flash("info", "Inventory item added successfully!");
+    res.redirect("/inv/management");
+  } catch (error) {
+    console.error("Error adding inventory:", error.message);
+    req.flash("error", "Failed to add inventory item.");
+    res.redirect("/inv/add-inventory");
+  }
+};
+
+/* ***************************
+ * Show add inventory form
+ * ************************** */
+invCont.showAddInventory = async function (req, res, next) {
+  try {
+    console.log("Rendering add-inventory page..."); 
+    const nav = await utilities.getNav();
+    const classificationSelect = await utilities.buildClassificationList(); // Select list for classifications
+
+    res.render("inventory/add-inventory", {
+      title: "Add New Vehicle",
+      nav,
+      classificationSelect,
+      message: req.flash("info") || req.flash("error"),
+      errors: null,
+      // These are the sticky input values, initially blank
+      inv_make: "",
+      inv_model: "",
+      inv_year: "",
+      inv_description: "",
+      inv_image: "/images/vehicles/no-image.png",
+      inv_thumbnail: "/images/vehicles/no-image-tn.png",
+      inv_price: "",
+      inv_miles: "",
+      inv_color: "",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+invCont.buildManagementView = async function (req, res) {
+  let nav = await utilities.getNav()
+  let message = req.flash("info") || req.flash("error")
+  res.render("inventory/management", {
+    title: "Inventory Management",
+    nav,
+    message,
+  })
+}
 
 
 module.exports = invCont;
