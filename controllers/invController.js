@@ -79,12 +79,17 @@ invCont.showAddClassification = async function (req, res, next) {
     res.render("inventory/add-classification", {
       title: "Add New Classification",
       nav,
-      message: req.flash("info") || req.flash("error"),
+      message: req.flash("info").concat(req.flash("error")),
+      classification_name: req.session.classification_name || "" // sticky value
     });
+
+    // Clear the sticky data
+    req.session.classification_name = null;
   } catch (error) {
     next(error);
   }
 };
+
 
 /* ***************************
  * Add inventory form
@@ -102,6 +107,7 @@ invCont.addInventory = async function (req, res, next) {
     inv_color,
     classification_id
   } = req.body;
+  console.log("Incoming inventory data:", req.body);
 
   try {
     const result = await invModel.insertInventory(
@@ -130,16 +136,18 @@ invCont.addInventory = async function (req, res, next) {
  * Show add inventory form
  * ************************** */
 invCont.showAddInventory = async function (req, res, next) {
-  try {
-    console.log("Rendering add-inventory page..."); 
+  try { 
     const nav = await utilities.getNav();
     const classificationSelect = await utilities.buildClassificationList(); // Select list for classifications
+
+    const formData = req.session.formData || {};
+    req.session.formData = null;
 
     res.render("inventory/add-inventory", {
       title: "Add New Vehicle",
       nav,
       classificationSelect,
-      message: req.flash("info") || req.flash("error"),
+      message: req.flash("info").concat(req.flash("error")),
       errors: null,
       // These are the sticky input values, initially blank
       inv_make: "",
@@ -151,6 +159,7 @@ invCont.showAddInventory = async function (req, res, next) {
       inv_price: "",
       inv_miles: "",
       inv_color: "",
+      classification_id: "",
     });
   } catch (error) {
     next(error);

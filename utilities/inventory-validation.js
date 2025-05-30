@@ -20,21 +20,25 @@ validate.classificationRules = () => {
  * Check Classification Data and Return Errors
  ******************************************/
 validate.checkClassificationData = async (req, res, next) => {
+  const errors = validationResult(req);
   const { classification_name } = req.body;
-  let errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav();
-    res.render("inventory/add-classification", {
-      title: "Add New Classification",
-      nav,
-      errors: errors.array(),
-      classification_name
-    });
+    const nav = await utilities.getNav();
+
+    // Store errors as flash message
+    const errorMessages = errors.array().map(err => err.msg);
+    req.flash("error", errorMessages);
+
+    // Store sticky input via session (optional enhancement)
+    req.session.classification_name = classification_name;
+
+    res.redirect("/inv/add-classification"); // redirect instead of render
     return;
   }
   next();
 };
+
 
 /***********************************
  *  Inventory Validation Rules
@@ -115,11 +119,9 @@ validate.checkInventoryData = async (req, res, next) => {
     let nav = await utilities.getNav();
     let classificationSelect = await utilities.buildClassificationList(classification_id);
 
-    res.render("inventory/add-inventory", {
-      title: "Add New Inventory",
-      nav,
-      errors: errors.array(),
-      classificationSelect,
+    req.flash("error", errors.array().map(err => err.msg));
+
+    req.session.formData = {
       inv_make,
       inv_model,
       inv_year,
@@ -128,8 +130,12 @@ validate.checkInventoryData = async (req, res, next) => {
       inv_thumbnail,
       inv_price,
       inv_miles,
-      inv_color
-    });
+      inv_color,
+      classification_id
+    };
+
+  res.redirect("/inv/add-inventory");
+
     return;
   }
   next();

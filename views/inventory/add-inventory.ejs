@@ -2,7 +2,11 @@
 <div class="new-vehicle">
   
   <% if (message) { %>
-    <div class="flash-message"><%= message %></div>
+  <div class="flash-message">
+    <% message.forEach(msg => { %>
+      <p><%= message %></p>
+    <% }) %>
+  </div>
   <% } %>
 
   <form method="POST" action="/inv/add-inventory">

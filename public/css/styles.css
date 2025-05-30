@@ -203,8 +203,9 @@ h1 {
   #inv-display li:hover {
     transform: scale(1.1);
   }
-footer p {
+.end {
   margin-bottom: 10px;
+  padding: 10px;
 }
 
 /* Account Login Styles */
@@ -357,7 +358,7 @@ button {
   border: 1px solid gray;
   margin-top: 20px;
   padding: 10px;
-  width: 500px;
+  width: 300px;
   justify-content: center;
 }
 /* Flash Message Styling */
@@ -380,13 +381,13 @@ button {
   color: #c62828;
   border: 1px solid #ef5350;
 }
-
-/* Classification Form Styling */
 form {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
+  max-width: 300px;
   margin-top: 10px;
+  padding: 10px;
+  margin-bottom: 40px;
 }
 
 label {
@@ -420,13 +421,27 @@ button[type="submit"]:hover {
 /* New Vehicle style */
 .new-vehicle {
   display: block;
-  max-width: 500px;
+  max-width: 400px;
   margin: 0 auto;
+  margin-bottom: 20px;
   justify-content: center;
   border: 1px solid gray;
   border-radius: 3px;
   padding: 10px;
   background-color: #b9ddf7;
+}
+.new-vehicle form {
+  justify-content: center;
+  width: 100%;
+}
+/* Management Style */
+.management {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  background-color: white;
+  width: 30%;
+  margin-bottom: 40px;
 }
 
 
