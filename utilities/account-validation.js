@@ -90,7 +90,8 @@ validate.checkRegData = async (req, res, next) => {
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
     res.render("account/register", {
-      errors,
+      errors: errors.array(),
+      message: req.flash("info"),
       title: "Registration",
       nav,
       account_firstname,
@@ -112,7 +113,8 @@ validate.checkLoginData = async (req, res, next) => {
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
     res.render("account/login", {
-      errors:errors.array(),
+      errors: errors.array(),
+      message: req.flash("info"),
       title: "Login",
       nav,
       account_email,

@@ -6,8 +6,14 @@
   <main class="form-container">
     
     <% if (message) { %>
-      <div class="flash-message">
-        <%- messages() %>
+      <div id="flash-message">
+        <% if (errors) { %>
+          <ul class="notice">
+          <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+          <%  }) %>
+          </ul>
+        <% } %>      
       </div>
     <% } %>
 

@@ -111,6 +111,7 @@ invCont.addInventory = async function (req, res, next) {
 
   try {
     const result = await invModel.insertInventory(
+      classification_id,
       inv_make,
       inv_model,
       inv_year,
@@ -120,7 +121,6 @@ invCont.addInventory = async function (req, res, next) {
       inv_price,
       inv_miles,
       inv_color,
-      classification_id
     );
 
     req.flash("info", "Inventory item added successfully!");
@@ -159,7 +159,6 @@ invCont.showAddInventory = async function (req, res, next) {
       inv_price: "",
       inv_miles: "",
       inv_color: "",
-      classification_id: "",
     });
   } catch (error) {
     next(error);

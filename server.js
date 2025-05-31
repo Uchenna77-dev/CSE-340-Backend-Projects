@@ -82,12 +82,15 @@ app.use(async (req, res, next) => {
 * Place after all other middleware
 *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
+  console.error("🔥 Error caught in error handler:", err)
+
+  const nav = await utilities.getNav().catch(() => [])
   const status = err.status || 500
   const title = status === 404 ? "Page Not Found" : "Server Error"
   const message = err.message || "Something went wrong."
 
   const viewPath = status === 404 ? "errors/error" : "errors/serverError"
+
   res.status(status).render(viewPath, {
     title,
     message,
@@ -96,11 +99,12 @@ app.use(async (err, req, res, next) => {
 })
 
 
+
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
  *************************/
-const port = process.env.PORT || 10000
+const port = process.env.PORT
 const host = process.env.HOST
 
 /* ***********************

@@ -10,7 +10,8 @@ async function buildLogin(req, res, next) {
     res.render("account/login", {
       title: "Login",
       nav,
-      message: req.flash("info") // This will show flash messages (like errors or success notices)
+      message: req.flash("info"), // This will show flash messages (like errors or success notices)
+      errors: null,
     });
   } catch (error) {
     next(error); // Passes errors to Express error handler
@@ -23,6 +24,7 @@ async function buildRegister(req, res, next) {
     res.render("account/register", {
       title: "Register",
       nav,
+      message: req.flash("info"),
       errors: null
     });
   } catch (error) {
@@ -73,6 +75,7 @@ async function registerAccount(req, res) {
     res.status(500).render("account/register", {
       title: "Registration",
       nav,
+      message: req.flash("info"),
       errors: null,
     })
   }
@@ -98,6 +101,7 @@ async function registerAccount(req, res) {
     res.status(501).render("account/register", {
       title: "Registration",
       nav,
+      message: req.flash("info"),
     })
   }
 }
