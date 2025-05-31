@@ -87,7 +87,7 @@ app.use(async (err, req, res, next) => {
   const title = status === 404 ? "Page Not Found" : "Server Error"
   const message = err.message || "Something went wrong."
 
-  const viewPath = status === 404 ? "errors/error" : "serverError"
+  const viewPath = status === 404 ? "errors/error" : "errors/serverError"
   res.status(status).render(viewPath, {
     title,
     message,
