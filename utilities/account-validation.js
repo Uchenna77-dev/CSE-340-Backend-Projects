@@ -124,5 +124,82 @@ validate.checkLoginData = async (req, res, next) => {
   }
   next()
 }
+ 
+validate.updateRules = () => {
+  return [
+    body("account_firstname").notEmpty().withMessage("First name is required."),
+    body("account_lastname").notEmpty().withMessage("Last name is required."),
+    body("account_email").isEmail().withMessage("Valid email required."),
+  ]
+}
+
+validate.checkUpdateData = async (req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    const nav = await getNav()
+    return res.render("account/update-account", {
+      title: "Update Account",
+      nav,
+      errors: errors.array(),
+      account: req.body
+    })
+  }
+  next()
+}
+
+validate.passwordRules = () => {
+  return [
+    body("account_password")
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1
+      })
+      .withMessage("Password must meet requirements."),
+  ]
+}
+
+validate.checkPasswordData = async (req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    const nav = await getNav()
+    return res.render("account/update-account", {
+      title: "Update Account",
+      nav,
+      errors: errors.array(),
+      account: req.body
+    })
+  }
+  next()
+}
+
+/* ****************************************
+ *  Validates if the user is an Employee or Admin
+ * ************************************ */
+validate.requireEmployeeOrAdmin = async(req, res, next) =>{
+  const token = req.cookies.jwt
+  if (!token) {
+    req.flash("notice", "You must be logged in.")
+    return res.redirect("/account/login")
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    if (decoded.account_type === "Employee" || decoded.account_type === "Admin") {
+      res.locals.accountData = decoded
+      next()
+    } else {
+      req.flash("notice", "You are not authorized.")
+      res.redirect("/account/login")
+    }
+  } catch (err) {
+    req.flash("notice", "Invalid token.")
+    res.redirect("/account/login")
+  }
+}
+
+
 
 module.exports = validate

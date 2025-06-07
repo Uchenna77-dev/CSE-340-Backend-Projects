@@ -1,5 +1,13 @@
 <body>
   <header>
     <h1><a href="/" title="Return to home page">CSE Motors</a></h1>
-    <h3><a title="Click to login" href="/account/login">My ACCOUNT</a></h3>
+    
+    <div class="welcome">
+      <% if (loggedin) { %>
+      <h2><a href="/account/">Welcome <%= accountData.account_firstname %></a></h2>
+      <h2><a href="/account/logout">Logout</a></h2>
+      <% } else { %>
+      <h2><a href="/account/login">My Account</a></h2>
+      <% } %>
+    </div>
   </header>

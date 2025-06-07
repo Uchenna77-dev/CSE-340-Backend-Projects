@@ -17,7 +17,8 @@ const session = require("express-session")
 const pool = require('./database/')
 const accountRoute = require("./routes/accountRoute");
 const bodyParser = require("body-parser")
-
+const cookieParser = require("cookie-parser")
+const { checkLoginStatus } = require("./utilities")
 /* ***********************
  * Middleware
  * ************************/
@@ -32,6 +33,7 @@ const bodyParser = require("body-parser")
   name: 'sessionId',
 }))
 
+
 // Express Messages Middleware
 app.use(require('connect-flash')())
 app.use(function(req, res, next){
@@ -42,6 +44,13 @@ app.use(function(req, res, next){
 // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) 
+
+app.use(cookieParser())
+
+app.use(checkLoginStatus)
+
+// Cookies Check
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates

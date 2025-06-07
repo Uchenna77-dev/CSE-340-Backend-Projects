@@ -5,3 +5,20 @@
   <li><a href="/inv/add-inventory">Add New Vehicle</a></li>
 </ul>
 
+<h2>Manage Inventory</h2>
+
+  <p>Select a classification from the list to see the items belonging to that classification.</p>
+
+  <!-- Classification dropdown rendered from server -->
+  <div id="classificationDropdown">
+    <%- classificationSelect %>
+  </div>
+
+  <!-- Inventory table placeholder -->
+  <table id="inventoryDisplay"></table>
+
+  <noscript>JavaScript must be enabled to use this page.</noscript>
+</main>
+
+<!-- Link your JavaScript file here -->
+<script src="/js/inventory.js"></script>

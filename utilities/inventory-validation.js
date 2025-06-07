@@ -98,7 +98,7 @@ validate.inventoryRules = () => {
 };
 
 /******************************************
- * Check Inventory Data and Return Errors
+ * Check Inventory Data and Return Errors to add-inventory view
  ******************************************/
 validate.checkInventoryData = async (req, res, next) => {
   let errors = validationResult(req);
@@ -140,5 +140,58 @@ validate.checkInventoryData = async (req, res, next) => {
   }
   next();
 };
+
+/******************************************
+ * Check Inventory Data and Return Errors to edit view
+ ******************************************/
+validate.checkUpdateData = async (req, res, next) => {
+  let errors = validationResult(req);
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
+  } = req.body;
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    let classificationSelect = await utilities.buildClassificationList(classification_id);
+
+    req.flash("error", errors.array().map(err => err.msg));
+
+    req.session.formData = {
+      inv_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id
+    };
+
+    res.render("inventory/edit-inventory", {
+      title: "Edit " + name,
+      nav,
+      classificationSelect,
+      errors,
+    });
+  //res.redirect("/inv/edit-inventory");
+
+    return;
+  }
+  next();
+};
+
 
 module.exports = validate;

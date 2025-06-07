@@ -443,7 +443,11 @@ button[type="submit"]:hover {
   width: 30%;
   margin-bottom: 40px;
 }
-
+.welcome h2 {
+  display: flex;
+  justify-content: flex-end;
+  font-style: italic;
+}
 
 /* Responsive layout for larger screens */
 @media screen and (min-width: 768px) {

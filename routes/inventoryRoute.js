@@ -21,8 +21,26 @@ router.get("/add-classification", utilities.handleErrors(invController.showAddCl
 router.get("/add-inventory", utilities.handleErrors(invController.showAddInventory));
 
 // Route to build management view
-router.get("/management", utilities.handleErrors(invController.buildManagementView))
+router.get("/", utilities.handleErrors(invController.buildManagementView))
 
+// Route to get Inventroy by Classificatioon
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
+
+// Route to Update Inventory
+router.get("/edit/:inv_id",
+  invController.editInventoryView,
+  utilities.handleErrors(invController.editInventoryView))
+
+// Deliver delete confirmation view
+router.get("/delete/:inv_id", utilities.handleErrors(invController.buildDeleteInventoryView))
+
+router.post("/delete", utilities.handleErrors(invController.deleteInventoryItem))
+  
+// Route to handle inventory update
+router.post("/update/",
+  inventoryValidate.inventoryRules(),
+  invController.updateInventory,
+  utilities.handleErrors(invController.updateInventory))  
 
 // Route to handle classification submission
 router.post(
