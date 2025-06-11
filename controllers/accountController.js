@@ -123,6 +123,7 @@ async function accountLogin(req, res) {
     res.status(400).render("account/login", {
       title: "Login",
       nav,
+      message: req.flash("notice"),
       errors: null,
       account_email,
     })
