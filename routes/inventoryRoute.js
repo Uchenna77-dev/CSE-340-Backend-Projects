@@ -3,8 +3,9 @@ const express = require("express")
 const router = new express.Router() 
 const utilities = require("../utilities/")
 const invController = require("../controllers/invController")
-const classificationValidate = require('../utilities/inventory-validation')
-const inventoryValidate = require('../utilities/inventory-validation')
+const validate = require('../utilities/inventory-validation')
+const accountValidate = require('../utilities/account-validation')
+
 // Route to build inventory by classification view
 router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
 
@@ -34,19 +35,25 @@ router.get("/edit/:inv_id",
 // Deliver delete confirmation view
 router.get("/delete/:inv_id", utilities.handleErrors(invController.buildDeleteInventoryView))
 
+router.get(
+  "/delete-classification/:classificationId",
+  utilities.handleErrors(invController.showDeleteClassificationView)
+);
+
+
 router.post("/delete", utilities.handleErrors(invController.deleteInventoryItem))
   
 // Route to handle inventory update
 router.post("/update/",
-  inventoryValidate.inventoryRules(),
+  validate.inventoryRules(),
   invController.updateInventory,
   utilities.handleErrors(invController.updateInventory))  
 
 // Route to handle classification submission
 router.post(
   "/add-classification",
-  classificationValidate.classificationRules(),
-  classificationValidate.checkClassificationData,
+  validate.classificationRules(),
+  validate.checkClassificationData,
   invController.addClassification,
   invController.showAddClassification
 );
@@ -54,12 +61,17 @@ router.post(
 // Route to handle new vehicle submission
 router.post(
   "/add-inventory",
-  inventoryValidate.inventoryRules(),
-  inventoryValidate.checkInventoryData,
+  validate.inventoryRules(),
+  validate.checkInventoryData,
   invController.addInventory,
   invController.showAddInventory
 );
 
+router.post(
+  "/inv/delete-classification/:classificationId",
+  accountValidate.requireAdmin,
+  utilities.handleErrors(invController.deleteClassification)
+);
 
 
 module.exports = router;

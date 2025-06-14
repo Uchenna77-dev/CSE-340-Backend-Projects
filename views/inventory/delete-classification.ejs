@@ -1,0 +1,7 @@
+<h1>Delete Classification</h1>
+
+<% if (accountData && accountData.account_type === "Admin") { %>
+  <form action="/inv/delete-classification/<%= classification.classification_id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this classification?')">
+    <button type="submit">Delete</button>
+  </form>
+<% } %>

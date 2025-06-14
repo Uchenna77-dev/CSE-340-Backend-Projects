@@ -17,6 +17,22 @@
   <!-- Inventory table placeholder -->
   <table id="inventoryDisplay"></table>
 
+<h2>Manage Classification</h2>
+
+<p>Delete Classification in which all Vehicles have been sold out</p>
+
+<ul>
+  <% classifications.forEach(classification => { %>
+    <li>
+      <a href="/inv/delete-classification/<%= classification.classification_id %>">
+        Delete <%= classification.classification_name %>
+      </a>
+    </li>
+  <% }); %>
+</ul>
+
+
+
   <noscript>JavaScript must be enabled to use this page.</noscript>
 </main>
 

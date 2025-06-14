@@ -200,6 +200,27 @@ validate.requireEmployeeOrAdmin = async(req, res, next) =>{
   }
 }
 
+validate.requireAdmin = async (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    req.flash("notice", "You must be logged in.");
+    return res.redirect("/account/login");
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    if (decoded.account_type === "Admin") {
+      res.locals.accountData = decoded;
+      next();
+    } else {
+      req.flash("notice", "You are not authorized to perform this action.");
+      return res.redirect("/account/login");
+    }
+  } catch (err) {
+    req.flash("notice", "Invalid token.");
+    return res.redirect("/account/login");
+  }
+};
 
 
 module.exports = validate

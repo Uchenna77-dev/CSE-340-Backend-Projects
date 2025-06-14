@@ -180,10 +180,12 @@ async function buildUpdateView(req, res) {
   const account_id = parseInt(req.params.account_id)
   const account = await accountModel.getAccountById(account_id)
   const nav = await utilities.getNav()
+  req.flash("notice", "Account updated.");
 
   res.render("account/update-account", {
     title: "Update Account",
     nav,
+    message: req.flash("notice"),
     errors: null,
     account,
   })
