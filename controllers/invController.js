@@ -124,7 +124,7 @@ invCont.addInventory = async function (req, res, next) {
     );
 
     req.flash("info", "Inventory item added successfully!");
-    res.redirect("/inv/management");
+    res.redirect("/inv");
   } catch (error) {
     console.error("Error adding inventory:", error.message);
     req.flash("error", "Failed to add inventory item.");
@@ -323,57 +323,51 @@ invCont.deleteInventoryItem = async function (req, res, next) {
 }
 
  invCont.deleteClassification = async function (req, res) {
-  const classificationId = req.params.classificationId;
+  const { classification_id } = req.body
+  console.log("HIT DELETE ROUTE:", classification_id);
 
   try {
-    const vehicleCount = await inventoryModel.countVehiclesByClassification(classificationId);
+    const vehicleCount = await invModel.countVehiclesByClassification(classification_id);
 
     if (vehicleCount > 0) {
       req.flash("notice", "Cannot delete classification with existing vehicles.");
-      return res.redirect("/inv");
+      return res.redirect("/inv/delete-classification");
     }
 
-    await inventoryModel.deleteClassificationById(classificationId);
+    const result = await invModel.deleteClassificationById(classification_id);
+    if(result){
     req.flash("notice", "Classification deleted successfully.");
     res.redirect("/inv");
-
+    }  
  
   } catch (err) {
     console.error("Error deleting classification:", err);
     req.flash("notice", "Error deleting classification.");
-    res.redirect("/inv");
+    res.redirect("/inv/delete-classification");
   }
+  
 }
 
 invCont.showDeleteClassificationView = async function (req, res) {
-  const classificationId = req.params.classificationId;
   const nav = await utilities.getNav();
 
-  // Check if there are vehicles using this classification
-  const vehicleCount = await invModel.countVehiclesByClassification(classificationId);
-  
+  try {
+    const classifications = await invModel.getAllClassifications();
 
-  if (vehicleCount > 0) {
-    req.flash("notice", "This classification cannot be deleted because it has vehicles assigned.");
-    return res.redirect("/inv");
+    res.render("inventory/delete-classification", {
+      title: "Manage Classifications",
+      nav,
+      classifications,
+      message: req.flash("notice"),
+      accountData: res.locals.accountData
+    });
+  } catch (error) {
+    console.error("Error loading classification delete view:", error);
+    req.flash("notice", "Something went wrong loading the delete page.");
+    res.redirect("/inv");
   }
-
-  const classification = await invModel.getAllClassifications(classificationId);
-
-  if (!classification) {
-    req.flash("notice", "Classification not found.");
-    return res.redirect("/inv");
-  }
-
-  res.render("inventory/delete-classification", {
-    title: "Delete Classification",
-    nav,
-    classification,
-    message: req.flash("notice"),
-    errors: null,
-    accountData: res.locals.accountData
-  });
 };
+
 
 
 module.exports = invCont;

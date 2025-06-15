@@ -1,6 +1,7 @@
 const utilities = require(".")
   const { body, validationResult } = require("express-validator")
   const accountModel = require("../models/account-model")
+  const jwt = require('jsonwebtoken');
   const validate = {}
 
 
@@ -202,14 +203,20 @@ validate.requireEmployeeOrAdmin = async(req, res, next) =>{
 
 validate.requireAdmin = async (req, res, next) => {
   const token = req.cookies.jwt;
+  console.log("Token:", token);
   if (!token) {
     req.flash("notice", "You must be logged in.");
     return res.redirect("/account/login");
   }
 
   try {
+    console.log("Secret:", process.env.ACCESS_TOKEN_SECRET);
+
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    console.log("✅ Token decoded:", decoded);
     if (decoded.account_type === "Admin") {
+      console.log("✅ Admin access granted");
+
       res.locals.accountData = decoded;
       next();
     } else {
@@ -217,6 +224,7 @@ validate.requireAdmin = async (req, res, next) => {
       return res.redirect("/account/login");
     }
   } catch (err) {
+    console.error("JWT verify error:", err.message);
     req.flash("notice", "Invalid token.");
     return res.redirect("/account/login");
   }

@@ -157,10 +157,10 @@ async function deleteInventoryItem(inv_id) {
 }
 
 
-async function countVehiclesByClassification(classification_id) {
+async function countVehiclesByClassification(classificationId) {
   const result = await pool.query(
     "SELECT COUNT(*) FROM inventory WHERE classification_id = $1",
-    [classification_id]
+    [classificationId]
   );
   return parseInt(result.rows[0].count);
 }
@@ -175,14 +175,20 @@ async function getAllClassifications() {
 /* ***************************
  *  Delete Classification by ID
  * ************************** */
-async function deleteClassificationById(classification_id) {
+async function deleteClassificationById(classificationId) {
   try {
-    const sql = 'DELETE FROM classification WHERE classification_id = $1';
-    const result = await pool.query(sql, [classification_id]);
+    const sql = 'DELETE FROM public.classification WHERE classification_id = $1';
+    const result = await pool.query(sql, [classificationId]);
     return result;
   } catch (error) {
     throw new Error("Delete Classification Error: " + error.message);
   }
+}
+
+async function getClassificationById(classification_id) {
+  const sql = "SELECT * FROM classification WHERE classification_id = $1";
+  const result = await pool.query(sql, [classification_id]);
+  return result.rows[0];
 }
 
 
@@ -197,5 +203,6 @@ module.exports = {
   deleteInventoryItem,
   countVehiclesByClassification,
   getAllClassifications,
-  deleteClassificationById
+  deleteClassificationById,
+  getClassificationById
 };

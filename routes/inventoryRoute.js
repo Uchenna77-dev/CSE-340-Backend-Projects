@@ -6,17 +6,15 @@ const invController = require("../controllers/invController")
 const validate = require('../utilities/inventory-validation')
 const accountValidate = require('../utilities/account-validation')
 
-// Route to build inventory by classification view
-router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
-
-// Route to get vehicle details
-router.get("/detail/:inv_id", utilities.handleErrors(invController.getInventoryItem));
-
 // Create Error Route
 router.get("/errors/serverError", utilities.handleErrors(invController.triggerError));
 
 // Route to show add classification form
 router.get("/add-classification", utilities.handleErrors(invController.showAddClassification));
+
+// Route to Show Delete Classification form
+router.get("/delete-classification", accountValidate.requireAdmin, utilities.handleErrors(invController.showDeleteClassificationView));
+
 
 // Route to show add inventory form
 router.get("/add-inventory", utilities.handleErrors(invController.showAddInventory));
@@ -27,6 +25,12 @@ router.get("/", utilities.handleErrors(invController.buildManagementView))
 // Route to get Inventroy by Classificatioon
 router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 
+// Route to build inventory by classification view
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
+
+// Route to get vehicle details
+router.get("/detail/:inv_id", utilities.handleErrors(invController.getInventoryItem));
+
 // Route to Update Inventory
 router.get("/edit/:inv_id",
   invController.editInventoryView,
@@ -35,10 +39,6 @@ router.get("/edit/:inv_id",
 // Deliver delete confirmation view
 router.get("/delete/:inv_id", utilities.handleErrors(invController.buildDeleteInventoryView))
 
-router.get(
-  "/delete-classification/:classificationId",
-  utilities.handleErrors(invController.showDeleteClassificationView)
-);
 
 
 router.post("/delete", utilities.handleErrors(invController.deleteInventoryItem))
@@ -68,7 +68,7 @@ router.post(
 );
 
 router.post(
-  "/inv/delete-classification/:classificationId",
+  "/delete-classification",
   accountValidate.requireAdmin,
   utilities.handleErrors(invController.deleteClassification)
 );
